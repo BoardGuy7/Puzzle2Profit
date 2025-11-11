@@ -32,7 +32,7 @@
   - `id` (uuid, primary key)
   - `email` (text, unique, not null)
   - `name` (text, nullable)
-  - `mailchimp_synced` (boolean, default false)
+  - `brevo_synced` (boolean, default false)
   - `created_at` (timestamptz, default now())
 
   ## Security
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS email_signups (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email text UNIQUE NOT NULL,
   name text,
-  mailchimp_synced boolean DEFAULT false NOT NULL,
+  brevo_synced boolean DEFAULT false NOT NULL,
   created_at timestamptz DEFAULT now() NOT NULL
 );
 

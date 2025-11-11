@@ -7,7 +7,7 @@ A complete React/Node.js SaaS web application that helps beginners build passive
 ### Landing Page
 - **Auto-rotating Carousel**: 7 slides with 5-second autoplay, infinite loop, pause on hover, mobile swipe support
 - **Confetti Animation**: Celebrates completion on Day 7 slide
-- **Email Signup**: Integrates with Mailchimp API for capturing leads
+- **Email Signup**: Integrates with Brevo API for capturing leads
 - **Pricing Section**: Monthly ($48) and Annual ($499) subscription options
 - **SEO Optimized**: Meta tags for AI automation and passive income keywords
 - **Google Analytics**: Ready for tracking with placeholder ID
@@ -72,9 +72,8 @@ VITE_SUPABASE_ANON_KEY=your_anon_key_here
 # Stripe (Add your keys)
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_STRIPE_KEY_HERE
 
-# Mailchimp (Add your API keys)
-VITE_MAILCHIMP_API_KEY=YOUR_MAILCHIMP_API_KEY_HERE
-VITE_MAILCHIMP_LIST_ID=YOUR_MAILCHIMP_LIST_ID_HERE
+# Brevo (Add your API key)
+VITE_BREVO_API_KEY=YOUR_BREVO_API_KEY_HERE
 
 # Google Analytics (Add your tracking ID)
 VITE_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
@@ -136,13 +135,13 @@ src/
 4. Add price IDs to your checkout implementation
 5. Set up webhook for subscription events
 
-### Mailchimp Setup
+### Brevo Setup
 
-1. Create a Mailchimp account
-2. Create a new audience/list
-3. Get your API key from Account > Extras > API Keys
-4. Get your List ID from Audience > Settings > Audience name and defaults
-5. Update the `.env` file
+1. Create a Brevo account at https://brevo.com
+2. Create contact lists for your segments
+3. Get your API key from Settings > SMTP & API > API Keys
+4. Add the API key to your Supabase Edge Function secrets as `BREVO_API_KEY`
+5. The Edge Function `brevo-signup` handles contact creation and list management
 
 ### Stripe Webhook Handler (Recommended)
 
