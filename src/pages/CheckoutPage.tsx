@@ -23,20 +23,51 @@ export default function CheckoutPage() {
   }, [user, navigate]);
 
   const handleCheckout = async () => {
+    if (!user?.id) return;
+
     setLoading(true);
 
-    alert(
-      'Stripe integration ready!\n\n' +
-      'To complete setup:\n' +
-      '1. Add your Stripe publishable key to .env\n' +
-      '2. Create price IDs in Stripe Dashboard\n' +
-      '3. Deploy a webhook handler using Supabase Edge Functions\n\n' +
-      `Selected plan: ${selectedPlan}\n` +
-      `User ID: ${user?.id}\n` +
-      `Email: ${profile?.email}`
-    );
+    try {
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`;
 
-    setLoading(false);
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: selectedPlan === 'annual'
+            ? 'price_1SSOtjJyZPU9wusP5Iaxlt6m'
+            : 'price_1SSOsjJyZPU9wusPz85je8Ek',
+          userId: user.id,
+          email: profile?.email,
+          successUrl: `${window.location.origin}/dashboard?payment=success`,
+          cancelUrl: `${window.location.origin}/checkout?payment=cancelled`
+        })
+      });
+
+      const { sessionId, error } = await response.json();
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+
+      if (stripeError) {
+        throw stripeError;
+      }
+    } catch (err: any) {
+      alert(`Checkout error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const plans = {

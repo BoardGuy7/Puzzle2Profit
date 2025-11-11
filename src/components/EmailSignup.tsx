@@ -15,9 +15,11 @@ export default function EmailSignup() {
     setError('');
 
     try {
-      const { error: dbError } = await supabase
+      const { data, error: dbError } = await supabase
         .from('email_signups')
-        .insert({ email, name: name || null });
+        .insert({ email, name: name || null })
+        .select()
+        .single();
 
       if (dbError) {
         if (dbError.code === '23505') {
@@ -26,6 +28,20 @@ export default function EmailSignup() {
           throw dbError;
         }
       } else {
+        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/brevo-signup`;
+        await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            name: name || email.split('@')[0],
+            listIds: [2, 4]
+          })
+        });
+
         setSuccess(true);
         setEmail('');
         setName('');
