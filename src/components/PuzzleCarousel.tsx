@@ -22,11 +22,11 @@ const slides: CarouselSlide[] = [
     day: 1,
     name: 'Build',
     theme: 'Create Your Foundation',
-    outcome: 'Launch a complete AI-powered business in under 2 hours',
+    outcome: 'Learn to set up basic AI tools for business foundations',
     bullets: [
-      'Set up payment processing in 15 minutes',
-      'Deploy AI chatbot that handles 90% of customer questions',
-      'Create automated email sequences that sell while you sleep'
+      'Explore payment integrations and processing concepts',
+      'Build simple chatbots for handling queries',
+      'Understand email automation concepts and workflows'
     ],
     category: 'Build'
   },
@@ -34,11 +34,11 @@ const slides: CarouselSlide[] = [
     day: 2,
     name: 'Attract',
     theme: 'Drive Traffic',
-    outcome: 'Generate 1,000+ targeted visitors without paid ads',
+    outcome: 'Develop strategies for organic traffic generation',
     bullets: [
-      'AI-generated content that ranks on Google in 48 hours',
-      'Viral social media posts created in 5 minutes',
-      'Automated SEO that brings customers to your door'
+      'Create AI-assisted content for search engine optimization',
+      'Generate social post ideas using AI tools',
+      'Learn SEO basics and content distribution methods'
     ],
     category: 'Attract'
   },
@@ -46,11 +46,11 @@ const slides: CarouselSlide[] = [
     day: 3,
     name: 'Convert',
     theme: 'Turn Leads into Sales',
-    outcome: 'Convert 15-25% of visitors into paying customers',
+    outcome: 'Explore conversion optimization techniques',
     bullets: [
-      'AI-optimized landing pages that double conversions',
-      'Smart lead magnets that collect emails automatically',
-      'Persuasive sales funnels that close deals 24/7'
+      'Landing page optimization principles and design',
+      'Lead capture methods and form strategies',
+      'Funnel design principles for user journeys'
     ],
     category: 'Convert'
   },
@@ -58,11 +58,11 @@ const slides: CarouselSlide[] = [
     day: 4,
     name: 'Deliver',
     theme: 'Automate Fulfillment',
-    outcome: 'Deliver premium value without lifting a finger',
+    outcome: 'Study fulfillment automation and delivery systems',
     bullets: [
-      'AI systems that fulfill orders instantly',
-      'Automated onboarding that delights customers',
-      'Self-service portals that eliminate support tickets'
+      'Learn automated order processing workflows',
+      'Explore customer onboarding automation tools',
+      'Build self-service portal concepts and features'
     ],
     category: 'Deliver'
   },
@@ -70,11 +70,11 @@ const slides: CarouselSlide[] = [
     day: 5,
     name: 'Support',
     theme: 'Handle Customer Needs',
-    outcome: 'Provide 5-star support without hiring anyone',
+    outcome: 'Build AI support tools and customer service systems',
     bullets: [
-      'AI assistants that solve 95% of customer issues',
-      'Smart chatbots that feel human and caring',
-      'Automated refund and complaint systems'
+      'Develop AI assistant capabilities for common inquiries',
+      'Design conversational chatbot experiences',
+      'Understand support ticket automation workflows'
     ],
     category: 'Support'
   },
@@ -82,11 +82,11 @@ const slides: CarouselSlide[] = [
     day: 6,
     name: 'Profit',
     theme: 'Scale Revenue',
-    outcome: 'Grow from $0 to $10k/month in 90 days',
+    outcome: 'Explore revenue scaling strategies and growth techniques',
     bullets: [
-      'AI-powered upsells that increase order value by 40%',
-      'Automated affiliate programs that recruit promoters',
-      'Smart pricing algorithms that maximize profits'
+      'Learn upsell techniques and cross-sell methods',
+      'Understand affiliate program basics and structure',
+      'Pricing strategy concepts and value optimization'
     ],
     category: 'Profit'
   },
@@ -94,11 +94,11 @@ const slides: CarouselSlide[] = [
     day: 7,
     name: 'Rest',
     theme: 'Prioritize Prosperity',
-    outcome: 'Build a business that works without you',
+    outcome: 'Design sustainable workflows for work-life balance',
     bullets: [
-      'Complete automation dashboard with zero daily tasks',
-      'Financial freedom with passive income streams',
-      'Time to enjoy life while AI runs your empire'
+      'Dashboard monitoring skills and analytics review',
+      'Long-term skill application and continuous learning',
+      'Time management with automation and delegation'
     ],
     category: 'Rest'
   }
@@ -196,13 +196,12 @@ export default function PuzzleCarousel({ onSignupClick }: PuzzleCarouselProps) {
                   </ul>
 
                   {index === slides.length - 1 && (
-                    <div className="bg-green-500 bg-opacity-20 border-2 border-green-500 rounded-lg p-6 mb-6">
-                      <p className="text-white text-xl md:text-2xl font-bold text-center">
-                        You just built a complete AI profit machine.
-                        <br />
-                        <span className="text-green-400">
-                          You now own a $10k/mo AI system that runs without you.
+                    <div className="bg-yellow-900 bg-opacity-40 border-2 border-yellow-500 rounded-lg p-6 mb-6">
+                      <p className="text-white text-base md:text-lg font-semibold text-center">
+                        <span className="text-yellow-400 font-bold block mb-2">
+                          Educational Content Reminder
                         </span>
+                        These puzzles teach skills for automation and business concepts. Actual business results vary widely based on individual effort, market conditions, and many external factors.
                       </p>
                     </div>
                   )}
@@ -215,8 +214,8 @@ export default function PuzzleCarousel({ onSignupClick }: PuzzleCarouselProps) {
                   className="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold px-12 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg"
                 >
                   {index === slides.length - 1
-                    ? "Start Your 7-Day Build FREE"
-                    : "Get Tomorrow's Puzzle FREE"}
+                    ? "Start Your 7-Day Learning Journey FREE"
+                    : "Get Tomorrow's Lesson FREE"}
                 </button>
               </div>
             </div>
