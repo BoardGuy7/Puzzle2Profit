@@ -85,7 +85,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <PuzzleIcon className="w-8 h-8 text-orange-500" />
+              <PuzzleIcon className="w-8 h-8 text-orange-500" aria-hidden="true" />
               <span className="text-2xl font-bold text-white">Puzzle Vault</span>
             </div>
             <div className="flex items-center gap-4">
@@ -98,6 +98,7 @@ export default function Dashboard() {
               <button
                 onClick={handleSignOut}
                 className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Sign out"
               >
                 <LogOut className="w-6 h-6" />
               </button>
@@ -108,9 +109,9 @@ export default function Dashboard() {
             <div className="bg-orange-500 bg-opacity-20 border-2 border-orange-500 rounded-lg p-4 mb-4">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
-                  <Lock className="w-6 h-6 text-orange-500" />
+                  <Lock className="w-6 h-6 text-orange-500" aria-hidden="true" />
                   <p className="text-white font-semibold">
-                    Upgrade to unlock full solutions and advanced guidance
+                    Upgrade to unlock full solutions and master advanced techniques
                   </p>
                 </div>
                 <button
@@ -125,20 +126,22 @@ export default function Dashboard() {
 
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search puzzles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                aria-label="Search puzzles by title, theme, or category"
                 className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500"
               />
             </div>
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true" />
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
+                aria-label="Filter puzzles by category"
                 className="pl-10 pr-8 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-orange-500 appearance-none cursor-pointer min-w-[200px]"
               >
                 <option value="all">All Categories</option>
@@ -202,16 +205,19 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  aria-label={isPaid ? `View full solution for ${puzzle.title}` : `View preview for ${puzzle.title}`}
+                >
                   {isPaid ? (
                     <>
-                      <Unlock className="w-4 h-4" />
+                      <Unlock className="w-4 h-4" aria-hidden="true" />
                       View Solution
                     </>
                   ) : (
                     <>
-                      <Lock className="w-4 h-4" />
-                      View Teaser
+                      <Lock className="w-4 h-4" aria-hidden="true" />
+                      View Preview
                     </>
                   )}
                 </button>
@@ -297,14 +303,15 @@ export default function Dashboard() {
                 </>
               ) : (
                 <div className="bg-orange-500 bg-opacity-20 border-2 border-orange-500 rounded-lg p-8 text-center">
-                  <Lock className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+                  <Lock className="w-12 h-12 text-orange-500 mx-auto mb-4" aria-hidden="true" />
                   <h3 className="text-2xl font-bold text-white mb-2">Unlock Full Solution</h3>
                   <p className="text-gray-300 mb-6">
-                    Upgrade to premium to access the complete step-by-step solution and advanced guidance.
+                    Upgrade to premium to access the complete step-by-step solution and master advanced techniques through guided learning.
                   </p>
                   <button
                     onClick={() => navigate('/checkout')}
                     className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-lg transition-colors"
+                    aria-label="Upgrade to premium membership"
                   >
                     Upgrade Now
                   </button>
