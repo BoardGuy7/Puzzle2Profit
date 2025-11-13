@@ -19,13 +19,13 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Unlock the Complete AI Profit Vault
+            Unlock the Complete AI Learning Vault
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Get instant access to all puzzles, solutions, and advanced guidance.
+            Get instant access to all puzzles, solutions, and educational guidance.
             <br />
             <span className="text-orange-500 font-semibold">
-              Limited spots available for early members.
+              Build practical AI automation skills at your own pace.
             </span>
           </p>
         </div>
@@ -43,7 +43,11 @@ export default function Pricing() {
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
-                <span className="text-white">Full access to all 7-day puzzles</span>
+                <span className="text-white">Access 7-day puzzle cycle to learn AI automation</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                <span className="text-white">Build skills in scripting and automation tools</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
@@ -51,7 +55,7 @@ export default function Pricing() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
-                <span className="text-white">Advanced AI automation strategies</span>
+                <span className="text-white">Community resources for practical application</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
@@ -59,7 +63,7 @@ export default function Pricing() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
-                <span className="text-white">New puzzles added weekly</span>
+                <span className="text-white">New educational puzzles added weekly</span>
               </li>
             </ul>
 
@@ -97,19 +101,27 @@ export default function Pricing() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
-                <span className="text-white">Priority support and updates</span>
+                <span className="text-white">Access 7-day puzzle cycle to learn AI automation</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
-                <span className="text-white">Exclusive bonus automation templates</span>
+                <span className="text-white">Build skills in scripting and automation tools</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
+                <span className="text-white">Community resources for practical application</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
+                <span className="text-white">Priority support and educational updates</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
+                <span className="text-white">Exclusive bonus automation learning templates</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
                 <span className="text-white">Early access to new puzzle categories</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-6 h-6 text-white flex-shrink-0 mt-1" />
-                <span className="text-white">Lifetime updates to existing content</span>
               </li>
             </ul>
 
@@ -119,6 +131,17 @@ export default function Pricing() {
             >
               Start Annual Plan
             </button>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-12">
+          <div className="bg-blue-900 bg-opacity-40 border-2 border-blue-500 rounded-xl p-8">
+            <h3 className="text-blue-300 font-bold text-xl mb-4 text-center">
+              Educational Platform Notice
+            </h3>
+            <p className="text-gray-300 text-base leading-relaxed">
+              Puzzle2Profit is an educational platform for AI skill-building. Subscription provides learning tools only—no guarantees of income or business success. Earnings, if any, depend on your effort, experience, and market conditions. The skills and strategies taught are for educational purposes and individual results will vary significantly. This content is not financial, legal, or professional advice. Always consult qualified professionals for financial decisions and business planning.
+            </p>
           </div>
         </div>
 
