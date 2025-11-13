@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Check, Puzzle, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
+import DisclaimerModal from '../components/DisclaimerModal';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -15,6 +16,7 @@ export default function CheckoutPage() {
     planParam === 'annual' ? 'annual' : 'monthly'
   );
   const [loading, setLoading] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -77,11 +79,11 @@ export default function CheckoutPage() {
       period: '/month',
       savings: null,
       features: [
-        'Full access to all 7-day puzzles',
+        'Access 7-day puzzle cycle to learn AI automation',
         'Complete solutions with step-by-step guides',
-        'Advanced AI automation strategies',
+        'Build skills in scripting and automation tools',
         'Searchable vault of all past puzzles',
-        'New puzzles added weekly',
+        'New educational puzzles added weekly',
         'Cancel anytime'
       ]
     },
@@ -92,10 +94,10 @@ export default function CheckoutPage() {
       savings: 'Save $77/year (17% off)',
       features: [
         'Everything in Monthly, plus:',
-        'Priority support and updates',
-        'Exclusive bonus automation templates',
+        'Priority support and educational updates',
+        'Exclusive bonus automation learning templates',
         'Early access to new puzzle categories',
-        'Lifetime updates to existing content',
+        'Community resources for practical application',
         'Best value - just $41.58/month'
       ]
     }
@@ -105,6 +107,10 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-black to-blue-950">
+      <DisclaimerModal
+        isOpen={showDisclaimer}
+        onAccept={() => setShowDisclaimer(false)}
+      />
       <header className="border-b border-gray-800 bg-black">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
@@ -121,10 +127,10 @@ export default function CheckoutPage() {
       <main className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Unlock the Complete Puzzle Vault
+            Unlock the Complete Learning Vault
           </h1>
           <p className="text-xl text-gray-300">
-            Choose your plan and start building your AI profit machine today
+            Choose your plan and start learning AI automation skills today
           </p>
         </div>
 
