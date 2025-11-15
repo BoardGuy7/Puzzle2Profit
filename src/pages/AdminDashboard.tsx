@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff, Lightbulb } from 'lucide-react';
+import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff, Lightbulb, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Blog, Trend, EmailCampaign } from '../lib/supabase';
 
@@ -112,6 +112,11 @@ export default function AdminDashboard() {
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  const exportResearch = async (format: 'json' | 'markdown' | 'csv') => {
+    const exportUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-research?format=${format}`;
+    window.open(exportUrl, '_blank');
   };
 
   const runResearch = async (customTopic?: string) => {
@@ -435,14 +440,44 @@ export default function AdminDashboard() {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-white">AI Research Trends</h2>
-                  <button
-                    onClick={() => runResearch()}
-                    disabled={researchLoading}
-                    className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
-                  >
-                    <TrendingUp className="w-5 h-5" />
-                    {researchLoading ? 'Running...' : 'Run Research'}
-                  </button>
+                  <div className="flex gap-3">
+                    <div className="relative group">
+                      <button
+                        className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                      >
+                        <Download className="w-5 h-5" />
+                        Export
+                      </button>
+                      <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <button
+                          onClick={() => exportResearch('json')}
+                          className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 rounded-t-lg transition-colors"
+                        >
+                          Export as JSON
+                        </button>
+                        <button
+                          onClick={() => exportResearch('markdown')}
+                          className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 transition-colors"
+                        >
+                          Export as Markdown
+                        </button>
+                        <button
+                          onClick={() => exportResearch('csv')}
+                          className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 rounded-b-lg transition-colors"
+                        >
+                          Export as CSV
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => runResearch()}
+                      disabled={researchLoading}
+                      className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                    >
+                      <TrendingUp className="w-5 h-5" />
+                      {researchLoading ? 'Running...' : 'Run Research'}
+                    </button>
+                  </div>
                 </div>
 
                 {showResearchInput && (
