@@ -83,7 +83,7 @@ Format the response as JSON with keys: summary, tools, blog_ideas`;
             content: prompt
           }
         ],
-        model: 'grok-beta',
+        model: 'grok-2-latest',
         temperature: 0.6,
       }),
     });
