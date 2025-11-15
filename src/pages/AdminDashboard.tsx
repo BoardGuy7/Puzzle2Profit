@@ -12,6 +12,7 @@ export default function AdminDashboard() {
   const [trends, setTrends] = useState<Trend[]>([]);
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
   const [loading, setLoading] = useState(true);
+  const [researchLoading, setResearchLoading] = useState(false);
   const [stats, setStats] = useState({
     totalBlogs: 0,
     publishedBlogs: 0,
@@ -109,6 +110,34 @@ export default function AdminDashboard() {
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  const runResearch = async () => {
+    setResearchLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/research-agent`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        await fetchTrends();
+        alert('Research completed successfully!');
+      } else {
+        const error = await response.json();
+        alert(`Research failed: ${error.error}`);
+      }
+    } catch (error: any) {
+      alert(`Error: ${error.message}`);
+    } finally {
+      setResearchLoading(false);
+    }
   };
 
   const getCategoryColor = (category: string) => {
@@ -363,7 +392,17 @@ export default function AdminDashboard() {
 
             {activeTab === 'trends' && (
               <div>
-                <h2 className="text-2xl font-bold text-white mb-6">AI Research Trends</h2>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">AI Research Trends</h2>
+                  <button
+                    onClick={runResearch}
+                    disabled={researchLoading}
+                    className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                  >
+                    <TrendingUp className="w-5 h-5" />
+                    {researchLoading ? 'Running...' : 'Run Research'}
+                  </button>
+                </div>
 
                 {trends.length === 0 ? (
                   <div className="text-center py-20 bg-gray-900 bg-opacity-50 rounded-xl border border-gray-800">
