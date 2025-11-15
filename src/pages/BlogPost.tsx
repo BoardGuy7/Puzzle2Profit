@@ -144,10 +144,51 @@ export default function BlogPost() {
           </div>
         </div>
 
-        <div
-          className="prose prose-invert prose-lg max-w-none mb-12"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
+        <div className="prose prose-invert prose-lg max-w-none mb-12">
+          {blog.content.includes('<') ? (
+            <div
+              className="prose-headings:text-white prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-4 prose-h1:mt-8
+                         prose-h2:text-2xl prose-h2:font-bold prose-h2:mb-3 prose-h2:mt-6
+                         prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-2 prose-h3:mt-4
+                         prose-p:text-gray-300 prose-p:mb-4 prose-p:leading-relaxed
+                         prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-4
+                         prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-4
+                         prose-li:text-gray-300 prose-li:mb-2
+                         prose-strong:text-white prose-strong:font-semibold
+                         prose-a:text-teal-400 prose-a:underline hover:prose-a:text-teal-300"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
+          ) : (
+            <div className="text-gray-300 whitespace-pre-wrap leading-relaxed">
+              {blog.content.split('\n').map((paragraph, index) => {
+                const trimmed = paragraph.trim();
+                if (!trimmed) return <br key={index} />;
+
+                if (/^\d+\./.test(trimmed)) {
+                  return (
+                    <p key={index} className="mb-4 text-white font-semibold text-xl">
+                      {trimmed}
+                    </p>
+                  );
+                }
+
+                if (trimmed.length < 100 && !trimmed.endsWith('.')) {
+                  return (
+                    <h2 key={index} className="text-2xl font-bold text-white mb-4 mt-6">
+                      {trimmed}
+                    </h2>
+                  );
+                }
+
+                return (
+                  <p key={index} className="mb-4 leading-relaxed">
+                    {trimmed}
+                  </p>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {blog.affiliate_links && blog.affiliate_links.length > 0 && (
           <div className="bg-gradient-to-r from-teal-900 to-blue-900 bg-opacity-50 rounded-xl p-8 border border-teal-700 mb-8">
