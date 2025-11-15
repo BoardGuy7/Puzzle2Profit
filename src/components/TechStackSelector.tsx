@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Search, ExternalLink, Plus, Edit2, Trash2, CheckCircle, Circle, TrendingUp } from 'lucide-react';
+import { Search, ExternalLink, Plus, Edit2, Trash2, CheckCircle, Circle, TrendingUp, Brain } from 'lucide-react';
+import AffiliateContractAnalyzer from './AffiliateContractAnalyzer';
 
 interface TechStack {
   id: string;
@@ -33,6 +34,7 @@ export default function TechStackSelector() {
   const [editingStack, setEditingStack] = useState<TechStack | null>(null);
   const [editingAffiliateId, setEditingAffiliateId] = useState<string | null>(null);
   const [affiliateUrlInput, setAffiliateUrlInput] = useState('');
+  const [activeTab, setActiveTab] = useState<'stacks' | 'analyzer'>('stacks');
 
   useEffect(() => {
     loadData();
@@ -177,6 +179,37 @@ export default function TechStackSelector() {
           Add Tool
         </button>
       </div>
+
+      {/* Tab Navigation */}
+      <div className="flex gap-2 border-b border-gray-700">
+        <button
+          onClick={() => setActiveTab('stacks')}
+          className={`px-6 py-3 font-semibold transition-colors ${
+            activeTab === 'stacks'
+              ? 'text-teal-400 border-b-2 border-teal-400'
+              : 'text-gray-400 hover:text-gray-300'
+          }`}
+        >
+          Tech Stacks
+        </button>
+        <button
+          onClick={() => setActiveTab('analyzer')}
+          className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'analyzer'
+              ? 'text-purple-400 border-b-2 border-purple-400'
+              : 'text-gray-400 hover:text-gray-300'
+          }`}
+        >
+          <Brain className="w-4 h-4" />
+          AI Contract Analyzer
+        </button>
+      </div>
+
+      {/* Content based on active tab */}
+      {activeTab === 'analyzer' ? (
+        <AffiliateContractAnalyzer selectedTechStackId={selectedPath} />
+      ) : (
+        <>
 
       <div className="grid md:grid-cols-3 gap-4">
         <div className="md:col-span-1">
@@ -405,6 +438,8 @@ export default function TechStackSelector() {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
