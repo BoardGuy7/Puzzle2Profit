@@ -83,6 +83,8 @@ export interface Trend {
   blog_ideas: Array<{title: string; category: string; day: string; description: string}>;
   source: string;
   path_id: string | null;
+  week_number: number | null;
+  tools_populated: boolean;
   paths?: {
     id: string;
     name: string;
@@ -140,6 +142,14 @@ export interface TechStack {
   key_features: string[];
   selected_for_week: boolean;
   priority_score: number;
+  signup_status: 'pending' | 'registered' | 'active' | 'declined';
+  signup_date: string | null;
+  affiliate_notes: string | null;
+  last_used_week: string | null;
+  conversion_tracking_code: string | null;
+  tools_detailed_source: any;
+  week_number: number | null;
+  auto_populated: boolean;
   created_at: string;
   updated_at: string;
 }

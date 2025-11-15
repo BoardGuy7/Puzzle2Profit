@@ -242,6 +242,49 @@ export default function AdminDashboard() {
     }
   };
 
+  const populateTechStacks = async (trendId: string) => {
+    if (!confirm('This will auto-populate tech stacks from this research. Continue?')) {
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/populate-tech-stacks`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ trend_id: trendId }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(
+          `✅ ${result.message}\n\n` +
+          `Total tools: ${result.summary.total}\n` +
+          `New tools: ${result.summary.newTools}\n` +
+          `Reused tools: ${result.summary.reusedTools}\n\n` +
+          `Next Steps:\n${result.nextSteps.join('\n')}`
+        );
+        fetchData();
+      } else {
+        alert('Error: ' + (result.message || result.error));
+      }
+    } catch (error: any) {
+      alert('Failed to populate tech stacks: ' + error.message);
+    }
+  };
+
   const runResearch = async (customTopic?: string) => {
     if (!customTopic && !researchTopic.trim()) {
       setShowResearchInput(true);
@@ -860,9 +903,25 @@ export default function AdminDashboard() {
                           </div>
                         )}
 
-                        <p className="text-sm text-gray-400 mt-4 ml-9">
-                          Collected: {new Date(trend.created_at).toLocaleString()}
-                        </p>
+                        <div className="flex items-center justify-between mt-4 ml-9 pt-4 border-t border-gray-700">
+                          <p className="text-sm text-gray-400">
+                            Collected: {new Date(trend.created_at).toLocaleString()}
+                          </p>
+                          {trend.tools_detailed && trend.tools_detailed.length > 0 && (
+                            <button
+                              onClick={() => populateTechStacks(trend.id)}
+                              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
+                                trend.tools_populated
+                                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                                  : 'bg-teal-600 hover:bg-teal-700 text-white'
+                              }`}
+                              disabled={trend.tools_populated}
+                              title={trend.tools_populated ? 'Already populated' : 'Auto-populate tech stacks from this research'}
+                            >
+                              {trend.tools_populated ? '✓ Populated' : '→ Populate Tech Stacks'}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

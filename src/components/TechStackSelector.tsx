@@ -198,13 +198,10 @@ export default function TechStackSelector() {
                   Tool Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Category
+                  Affiliate Status
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                   Commission
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Priority
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                   Links
@@ -217,7 +214,7 @@ export default function TechStackSelector() {
             <tbody className="divide-y divide-gray-700">
               {filteredStacks.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-400">
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
                     No tech stacks found. Add some tools to get started!
                   </td>
                 </tr>
@@ -238,22 +235,39 @@ export default function TechStackSelector() {
                     </td>
                     <td className="px-4 py-3">
                       <div>
-                        <p className="text-white font-semibold">{stack.name}</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-white font-semibold">{stack.name}</p>
+                          {stack.auto_populated && (
+                            <span className="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-0.5 rounded">
+                              Auto
+                            </span>
+                          )}
+                          {stack.week_number && (
+                            <span className="bg-gray-700 text-gray-300 text-xs px-2 py-0.5 rounded">
+                              Week {stack.week_number}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-gray-400 line-clamp-1">{stack.description}</p>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded">
-                        {stack.category || 'Uncategorized'}
+                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                        stack.signup_status === 'active' ? 'bg-green-900 bg-opacity-50 text-green-300' :
+                        stack.signup_status === 'registered' ? 'bg-yellow-900 bg-opacity-50 text-yellow-300' :
+                        stack.signup_status === 'pending' ? 'bg-orange-900 bg-opacity-50 text-orange-300' :
+                        'bg-gray-700 text-gray-400'
+                      }`}>
+                        {stack.signup_status === 'active' ? '✓ Active' :
+                         stack.signup_status === 'registered' ? '⏳ Pending Approval' :
+                         stack.signup_status === 'pending' ? '⚠️ Needs Signup' :
+                         '✕ No Program'}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-green-400 text-sm font-semibold">
                         {stack.commission_rate || 'N/A'}
                       </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-teal-400 font-semibold">{stack.priority_score}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
