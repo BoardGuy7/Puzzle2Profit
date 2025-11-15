@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Search, Filter, Lock, Unlock, Puzzle as PuzzleIcon, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Puzzle } from '../lib/supabase';
@@ -95,6 +95,14 @@ export default function Dashboard() {
                   {isPaid ? 'Premium Member' : 'Free Account'}
                 </p>
               </div>
+              {profile?.is_admin && (
+                <Link
+                  to="/admin"
+                  className="text-teal-400 hover:text-teal-300 transition-colors text-sm font-semibold"
+                >
+                  Admin Panel
+                </Link>
+              )}
               <button
                 onClick={handleSignOut}
                 className="text-gray-400 hover:text-white transition-colors"

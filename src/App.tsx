@@ -4,6 +4,9 @@ import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import CheckoutPage from './pages/CheckoutPage';
+import BlogPost from './pages/BlogPost';
+import AdminDashboard from './pages/AdminDashboard';
+import BlogEditor from './pages/BlogEditor';
 import GlobalFooter from './components/GlobalFooter';
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/blog/:id" element={<BlogEditor />} />
             </Routes>
           </div>
           <GlobalFooter />

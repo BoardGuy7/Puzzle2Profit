@@ -4,6 +4,7 @@ import { Puzzle, Twitter, Linkedin, Youtube } from 'lucide-react';
 import PuzzleCarousel from '../components/PuzzleCarousel';
 import EmailSignup from '../components/EmailSignup';
 import Pricing from '../components/Pricing';
+import BlogList from '../components/BlogList';
 
 export default function LandingPage() {
   const signupRef = useRef<HTMLDivElement>(null);
@@ -48,18 +49,43 @@ export default function LandingPage() {
       <section className="py-12 md:py-20 px-4">
         <div className="max-w-7xl mx-auto text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Master <span className="text-orange-500">AI Automation Skills</span> Through Daily Puzzles
+            Welcome to <span className="text-teal-400">Puzzle2Profit</span>
             <br />
-            <span className="text-green-400">Develop Skills for Sustainable Growth Potential Through Learning</span>
+            <span className="text-orange-500">Daily AI Puzzles for Solopreneurs</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto">
-            Interactive puzzles that teach practical AI tools for automation through accessible learning.
+            Master the 7-day solopreneur cycle: <span className="text-blue-400">Build</span>, <span className="text-teal-400">Attract</span>, <span className="text-orange-400">Convert</span>, <span className="text-yellow-400">Deliver</span>, <span className="text-pink-400">Support</span>, <span className="text-green-400">Profit</span>, <span className="text-slate-400">Rest</span>
             <br />
-            <span className="text-white font-semibold">Complete 7 daily challenges to develop real-world skills for potential freelance projects or skill-based opportunities. Success requires consistent effort and practice.</span>
+            <span className="text-white font-semibold mt-4 block">Discover daily insights, AI tools, and strategies to build your solopreneur business through practical, hands-on learning.</span>
           </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/auth"
+              className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-lg"
+            >
+              Sign In
+            </Link>
+            <button
+              onClick={scrollToSignup}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-lg"
+            >
+              Start Learning Free
+            </button>
+          </div>
         </div>
+      </section>
 
-        <PuzzleCarousel onSignupClick={scrollToSignup} />
+      <section className="py-12 px-4 bg-gradient-to-b from-black to-gray-900">
+        <BlogList />
+      </section>
+
+      <section className="py-12 md:py-16 px-4 bg-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+            Featured Puzzles
+          </h2>
+          <PuzzleCarousel onSignupClick={scrollToSignup} />
+        </div>
       </section>
 
       <section id="how-it-works" className="py-20 px-4 bg-gradient-to-b from-black to-blue-950">

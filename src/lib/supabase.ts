@@ -15,6 +15,7 @@ export interface Profile {
   subscription_status: 'free' | 'monthly' | 'annual';
   stripe_customer_id: string | null;
   subscription_end_date: string | null;
+  is_admin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -39,4 +40,59 @@ export interface Puzzle {
 export interface EmailSignup {
   email: string;
   name?: string;
+}
+
+export interface AffiliateLink {
+  url: string;
+  description: string;
+  utm_params?: Record<string, string>;
+}
+
+export interface Blog {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  category: 'Build' | 'Attract' | 'Convert' | 'Deliver' | 'Support' | 'Profit' | 'Rest';
+  author: string;
+  affiliate_links: AffiliateLink[];
+  published: boolean;
+  published_date: string | null;
+  scheduled_date: string | null;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Trend {
+  id: string;
+  topic: string;
+  summary: string;
+  tools_mentioned: string[];
+  blog_ideas: Array<{title: string; category: string}>;
+  source: string;
+  created_at: string;
+}
+
+export interface AffiliateClick {
+  id: string;
+  blog_id: string;
+  url: string;
+  user_id: string | null;
+  clicked_at: string;
+  user_agent: string | null;
+  referrer: string | null;
+}
+
+export interface EmailCampaign {
+  id: string;
+  blog_id: string | null;
+  brevo_campaign_id: string | null;
+  subject: string;
+  sent_count: number;
+  open_rate: number;
+  click_rate: number;
+  bounce_rate: number;
+  sent_at: string;
+  last_synced: string;
 }
