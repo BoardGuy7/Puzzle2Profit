@@ -144,7 +144,16 @@ export default function AdminDashboard() {
         alert('Research completed successfully!');
       } else {
         const error = await response.json();
-        alert(`Research failed: ${error.error}`);
+        console.error('Research error:', error);
+        if (error.details) {
+          const missing = [];
+          if (!error.details.hasGrokKey) missing.push('XAI_API_KEY');
+          if (!error.details.hasSupabaseUrl) missing.push('SUPABASE_URL');
+          if (!error.details.hasServiceKey) missing.push('SUPABASE_SERVICE_ROLE_KEY');
+          alert(`Research failed: Missing environment variables in Supabase: ${missing.join(', ')}\n\nPlease configure these in your Supabase project settings under Edge Functions > Secrets.`);
+        } else {
+          alert(`Research failed: ${error.error}`);
+        }
       }
     } catch (error: any) {
       alert(`Error: ${error.message}`);
