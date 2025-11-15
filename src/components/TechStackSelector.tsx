@@ -31,6 +31,8 @@ export default function TechStackSelector() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingStack, setEditingStack] = useState<TechStack | null>(null);
+  const [editingAffiliateId, setEditingAffiliateId] = useState<string | null>(null);
+  const [affiliateUrlInput, setAffiliateUrlInput] = useState('');
 
   useEffect(() => {
     loadData();
@@ -90,6 +92,50 @@ export default function TechStackSelector() {
       loadData();
     } catch (error: any) {
       alert('Error deleting stack: ' + error.message);
+    }
+  };
+
+  const startEditingAffiliate = (stack: any) => {
+    setEditingAffiliateId(stack.id);
+    setAffiliateUrlInput(stack.affiliate_url || '');
+  };
+
+  const saveAffiliateUrl = async (stackId: string) => {
+    try {
+      const updateData: any = {
+        affiliate_url: affiliateUrlInput.trim(),
+      };
+
+      if (affiliateUrlInput.trim() && !techStacks.find(s => s.id === stackId)?.affiliate_url) {
+        updateData.signup_date = new Date().toISOString().split('T')[0];
+        updateData.signup_status = 'registered';
+      }
+
+      const { error } = await supabase
+        .from('tech_stacks')
+        .update(updateData)
+        .eq('id', stackId);
+
+      if (error) throw error;
+      setEditingAffiliateId(null);
+      setAffiliateUrlInput('');
+      loadData();
+    } catch (error: any) {
+      alert('Error saving affiliate URL: ' + error.message);
+    }
+  };
+
+  const updateSignupStatus = async (stackId: string, status: string) => {
+    try {
+      const { error } = await supabase
+        .from('tech_stacks')
+        .update({ signup_status: status })
+        .eq('id', stackId);
+
+      if (error) throw error;
+      loadData();
+    } catch (error: any) {
+      alert('Error updating status: ' + error.message);
     }
   };
 
@@ -252,17 +298,21 @@ export default function TechStackSelector() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                        stack.signup_status === 'active' ? 'bg-green-900 bg-opacity-50 text-green-300' :
-                        stack.signup_status === 'registered' ? 'bg-yellow-900 bg-opacity-50 text-yellow-300' :
-                        stack.signup_status === 'pending' ? 'bg-orange-900 bg-opacity-50 text-orange-300' :
-                        'bg-gray-700 text-gray-400'
-                      }`}>
-                        {stack.signup_status === 'active' ? '✓ Active' :
-                         stack.signup_status === 'registered' ? '⏳ Pending Approval' :
-                         stack.signup_status === 'pending' ? '⚠️ Needs Signup' :
-                         '✕ No Program'}
-                      </span>
+                      <select
+                        value={stack.signup_status || 'pending'}
+                        onChange={(e) => updateSignupStatus(stack.id, e.target.value)}
+                        className={`text-xs font-semibold px-2 py-1 rounded border-0 cursor-pointer ${
+                          stack.signup_status === 'active' ? 'bg-green-900 bg-opacity-50 text-green-300' :
+                          stack.signup_status === 'registered' ? 'bg-yellow-900 bg-opacity-50 text-yellow-300' :
+                          stack.signup_status === 'pending' ? 'bg-orange-900 bg-opacity-50 text-orange-300' :
+                          'bg-gray-700 text-gray-400'
+                        }`}
+                      >
+                        <option value="pending" className="bg-gray-800">⚠️ Needs Signup</option>
+                        <option value="registered" className="bg-gray-800">⏳ Pending Approval</option>
+                        <option value="active" className="bg-gray-800">✓ Active</option>
+                        <option value="declined" className="bg-gray-800">✕ No Program</option>
+                      </select>
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-green-400 text-sm font-semibold">
@@ -270,28 +320,63 @@ export default function TechStackSelector() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        {stack.website_url && (
-                          <a
-                            href={stack.website_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-400 hover:text-blue-300"
-                            title="Website"
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          {stack.website_url && (
+                            <a
+                              href={stack.website_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 text-xs flex items-center gap-1"
+                              title="Website"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Site
+                            </a>
+                          )}
+                          {stack.affiliate_url && (
+                            <a
+                              href={stack.affiliate_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+                              title="Affiliate Link"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Affiliate
+                            </a>
+                          )}
+                        </div>
+                        {editingAffiliateId === stack.id ? (
+                          <div className="flex gap-1">
+                            <input
+                              type="url"
+                              value={affiliateUrlInput}
+                              onChange={(e) => setAffiliateUrlInput(e.target.value)}
+                              placeholder="Paste affiliate URL..."
+                              className="flex-1 text-xs px-2 py-1 bg-gray-900 border border-teal-500 text-white rounded focus:outline-none"
+                              autoFocus
+                            />
+                            <button
+                              onClick={() => saveAffiliateUrl(stack.id)}
+                              className="text-xs bg-teal-600 hover:bg-teal-700 text-white px-2 py-1 rounded"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={() => setEditingAffiliateId(null)}
+                              className="text-xs bg-gray-600 hover:bg-gray-700 text-white px-2 py-1 rounded"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditingAffiliate(stack)}
+                            className="text-xs text-teal-400 hover:text-teal-300"
                           >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
-                        {stack.affiliate_url && (
-                          <a
-                            href={stack.affiliate_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-green-400 hover:text-green-300"
-                            title="Affiliate Link"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
+                            {stack.affiliate_url ? '✏️ Edit Link' : '+ Add Affiliate Link'}
+                          </button>
                         )}
                       </div>
                     </td>
