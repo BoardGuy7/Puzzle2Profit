@@ -21,10 +21,30 @@ Deno.serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!grokApiKey || !supabaseUrl || !supabaseServiceKey) {
-      throw new Error('Missing required environment variables');
+      return new Response(
+        JSON.stringify({
+          error: 'Missing required environment variables',
+          details: {
+            hasGrokKey: !!grokApiKey,
+            hasSupabaseUrl: !!supabaseUrl,
+            hasServiceKey: !!supabaseServiceKey
+          }
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    let requestData;
+    try {
+      requestData = await req.json();
+    } catch {
+      requestData = {};
+    }
 
     const topics = [
       'E-commerce automation',
@@ -35,9 +55,9 @@ Deno.serve(async (req: Request) => {
       'Data analysis tools'
     ];
 
-    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+    const researchTopic = requestData.topic || topics[Math.floor(Math.random() * topics.length)];
 
-    const prompt = `Research the latest trends in ${randomTopic} for solopreneurs in 2025. 
+    const prompt = `Research the latest trends in ${researchTopic} for solopreneurs in 2025. 
 
 Provide:
 1. A 200-word summary of the top 3 current trends
@@ -92,7 +112,7 @@ Format the response as JSON with keys: summary, tools, blog_ideas`;
     }
 
     const { error } = await supabase.from('trends').insert({
-      topic: randomTopic,
+      topic: researchTopic,
       summary: parsedData.summary || responseText.substring(0, 500),
       tools_mentioned: parsedData.tools || [],
       blog_ideas: parsedData.blog_ideas || [],
@@ -104,9 +124,9 @@ Format the response as JSON with keys: summary, tools, blog_ideas`;
     }
 
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: true,
-        topic: randomTopic,
+        topic: researchTopic,
         data: parsedData
       }),
       {

@@ -13,6 +13,8 @@ export default function AdminDashboard() {
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [researchLoading, setResearchLoading] = useState(false);
+  const [researchTopic, setResearchTopic] = useState('');
+  const [showResearchInput, setShowResearchInput] = useState(false);
   const [stats, setStats] = useState({
     totalBlogs: 0,
     publishedBlogs: 0,
@@ -112,8 +114,15 @@ export default function AdminDashboard() {
     navigate('/');
   };
 
-  const runResearch = async () => {
+  const runResearch = async (customTopic?: string) => {
+    if (!customTopic && !researchTopic.trim()) {
+      setShowResearchInput(true);
+      return;
+    }
+
     setResearchLoading(true);
+    setShowResearchInput(false);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/research-agent`;
@@ -124,10 +133,14 @@ export default function AdminDashboard() {
           'Authorization': `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          topic: customTopic || researchTopic
+        }),
       });
 
       if (response.ok) {
         await fetchTrends();
+        setResearchTopic('');
         alert('Research completed successfully!');
       } else {
         const error = await response.json();
@@ -395,7 +408,7 @@ export default function AdminDashboard() {
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-white">AI Research Trends</h2>
                   <button
-                    onClick={runResearch}
+                    onClick={() => runResearch()}
                     disabled={researchLoading}
                     className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
                   >
@@ -403,6 +416,38 @@ export default function AdminDashboard() {
                     {researchLoading ? 'Running...' : 'Run Research'}
                   </button>
                 </div>
+
+                {showResearchInput && (
+                  <div className="mb-6 bg-gray-900 bg-opacity-50 rounded-xl p-6 border border-teal-500">
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">
+                      What topic would you like researched?
+                    </label>
+                    <div className="flex gap-3">
+                      <input
+                        type="text"
+                        value={researchTopic}
+                        onChange={(e) => setResearchTopic(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && runResearch()}
+                        placeholder="e.g., AI automation for email marketing"
+                        className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-teal-500"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => runResearch()}
+                        disabled={!researchTopic.trim()}
+                        className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                      >
+                        Research
+                      </button>
+                      <button
+                        onClick={() => setShowResearchInput(false)}
+                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {trends.length === 0 ? (
                   <div className="text-center py-20 bg-gray-900 bg-opacity-50 rounded-xl border border-gray-800">
