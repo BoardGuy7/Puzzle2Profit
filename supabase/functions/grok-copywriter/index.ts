@@ -32,9 +32,9 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const grokApiKey = Deno.env.get('GROK_API_KEY');
+    const grokApiKey = Deno.env.get('XAI_API_KEY');
     if (!grokApiKey) {
-      throw new Error('GROK_API_KEY not configured');
+      throw new Error('XAI_API_KEY not configured');
     }
 
     const prompt = `Write an engaging, actionable blog post for solopreneurs about ${topic} in the "${category}" phase of business development.
