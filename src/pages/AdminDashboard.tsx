@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut } from 'lucide-react';
+import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Blog, Trend, EmailCampaign } from '../lib/supabase';
 
@@ -335,15 +335,34 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex gap-2 ml-4">
+                          <Link
+                            to={`/blog/${blog.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Preview
+                          </Link>
                           <button
                             onClick={() => togglePublish(blog)}
-                            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                            className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors ${
                               blog.published
                                 ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
                                 : 'bg-green-600 hover:bg-green-700 text-white'
                             }`}
                           >
-                            {blog.published ? 'Unpublish' : 'Publish'}
+                            {blog.published ? (
+                              <>
+                                <EyeOff className="w-4 h-4" />
+                                Unpublish
+                              </>
+                            ) : (
+                              <>
+                                <ExternalLink className="w-4 h-4" />
+                                Publish
+                              </>
+                            )}
                           </button>
                           <Link
                             to={`/admin/blog/edit/${blog.id}`}
