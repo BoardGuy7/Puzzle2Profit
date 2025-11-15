@@ -7,7 +7,7 @@ import { supabase, Blog, AffiliateLink } from '../lib/supabase';
 export default function BlogEditor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [title, setTitle] = useState('');
@@ -19,6 +19,8 @@ export default function BlogEditor() {
   const [newLinkDescription, setNewLinkDescription] = useState('');
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!user || !profile?.is_admin) {
       navigate('/dashboard');
       return;
@@ -27,7 +29,7 @@ export default function BlogEditor() {
     if (id && id !== 'new') {
       fetchBlog(id);
     }
-  }, [id, user, profile, navigate]);
+  }, [id, user, profile, authLoading, navigate]);
 
   const fetchBlog = async (blogId: string) => {
     setLoading(true);
@@ -157,7 +159,7 @@ export default function BlogEditor() {
     setLoading(false);
   };
 
-  if (loading && id && id !== 'new') {
+  if (authLoading || (loading && id && id !== 'new')) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500"></div>
