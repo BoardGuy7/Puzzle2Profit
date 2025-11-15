@@ -22,7 +22,8 @@ function App() {
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/blog/:id" element={<BlogEditor />} />
+              <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
+              <Route path="/admin/blog/new" element={<BlogEditor />} />
             </Routes>
           </div>
           <GlobalFooter />
