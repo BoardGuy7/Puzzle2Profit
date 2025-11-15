@@ -129,51 +129,50 @@ export default function AdminDashboard() {
       exportUrl += `&ids=${selectedResearchIds.join(',')}`;
     }
 
-    // For PDF, open in new window so user can print to PDF
-    if (format === 'pdf') {
-      const response = await fetch(exportUrl, {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (response.ok) {
-        const html = await response.text();
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-          printWindow.document.write(html);
-          printWindow.document.close();
-          // Automatically trigger print dialog after a short delay
-          setTimeout(() => {
-            printWindow.print();
-          }, 500);
-        }
-      } else {
-        alert('Export failed: ' + (await response.text()));
-      }
-      return;
-    }
-
-    // For other formats, download as file
+    // Fetch the data
     const response = await fetch(exportUrl, {
       headers: {
         'Authorization': `Bearer ${session.access_token}`,
       },
     });
 
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `research-export.${format}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } else {
-      alert('Export failed: ' + (await response.text()));
+    if (!response.ok) {
+      const errorText = await response.text();
+      alert('Export failed: ' + errorText);
+      return;
     }
+
+    // For PDF, open the HTML in a new window for printing
+    if (format === 'pdf') {
+      const html = await response.text();
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(html);
+        printWindow.document.close();
+
+        // Wait for content to load, then trigger print
+        printWindow.onload = () => {
+          setTimeout(() => {
+            printWindow.focus();
+            printWindow.print();
+          }, 250);
+        };
+      } else {
+        alert('Please allow popups to generate PDF');
+      }
+      return;
+    }
+
+    // For other formats, download as file
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `research-export.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const toggleResearchSelection = (id: string) => {

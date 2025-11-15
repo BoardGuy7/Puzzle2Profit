@@ -80,64 +80,111 @@ Deno.serve(async (req: Request) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>AI Automation Research Export</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Automation Research Export - ${new Date().toLocaleDateString()}</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
       line-height: 1.6;
-      max-width: 800px;
+      color: #1a1a1a;
+      background: white;
+      padding: 40px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 20px;
-      color: #333;
+    }
+    .header {
+      border-bottom: 4px solid #14b8a6;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
     }
     h1 {
       color: #14b8a6;
-      border-bottom: 3px solid #14b8a6;
-      padding-bottom: 10px;
-    }
-    h2 {
-      color: #0d9488;
-      margin-top: 30px;
-      page-break-after: avoid;
-    }
-    h3 {
-      color: #0f766e;
-      margin-top: 20px;
-    }
-    h4 {
-      color: #115e59;
-      margin-top: 15px;
+      font-size: 32px;
+      margin-bottom: 10px;
     }
     .meta {
       color: #666;
-      font-size: 0.9em;
-      margin-bottom: 30px;
+      font-size: 14px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .research-entry {
+      margin-bottom: 50px;
+      page-break-inside: avoid;
+    }
+    h2 {
+      color: #0d9488;
+      font-size: 24px;
+      margin-bottom: 15px;
+      padding-top: 20px;
+    }
+    .entry-meta {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+    h3 {
+      color: #0f766e;
+      font-size: 18px;
+      margin: 20px 0 10px 0;
+    }
+    .summary {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+    .tools-section {
+      margin: 20px 0;
     }
     .tool-badge {
       display: inline-block;
       background: #e0f2fe;
       color: #0369a1;
-      padding: 4px 12px;
-      border-radius: 12px;
-      margin: 4px;
-      font-size: 0.85em;
+      padding: 6px 14px;
+      border-radius: 16px;
+      margin: 5px 5px 5px 0;
+      font-size: 13px;
       font-weight: 600;
+    }
+    .blog-ideas-section {
+      margin-top: 25px;
     }
     .blog-idea {
       background: #f8fafc;
-      border-left: 4px solid #14b8a6;
-      padding: 15px;
-      margin: 10px 0;
+      border-left: 5px solid #14b8a6;
+      padding: 15px 20px;
+      margin: 12px 0;
       page-break-inside: avoid;
+      border-radius: 4px;
+    }
+    .blog-idea-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
     }
     .category-badge {
       display: inline-block;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.8em;
-      font-weight: bold;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
       color: white;
-      margin-right: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .category-build { background: #3b82f6; }
     .category-attract { background: #14b8a6; }
@@ -146,57 +193,112 @@ Deno.serve(async (req: Request) => {
     .category-support { background: #ec4899; }
     .category-profit { background: #22c55e; }
     .category-rest { background: #64748b; }
+    .blog-title {
+      font-weight: 600;
+      color: #1a1a1a;
+      font-size: 15px;
+    }
+    .blog-description {
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.6;
+    }
     .separator {
-      border-top: 2px solid #e2e8f0;
+      border-top: 2px solid #e5e7eb;
       margin: 40px 0;
     }
     @media print {
-      body { padding: 0; }
-      h2 { page-break-before: always; }
+      body {
+        padding: 20px;
+      }
+      .research-entry {
+        page-break-after: always;
+      }
+      .research-entry:last-child {
+        page-break-after: auto;
+      }
+      h2 {
+        page-break-after: avoid;
+      }
+      .blog-idea {
+        page-break-inside: avoid;
+      }
+    }
+    @page {
+      margin: 2cm;
     }
   </style>
 </head>
 <body>
-  <h1>AI Automation Research Export</h1>
-  <div class="meta">
-    <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
-    <p><strong>Total Research Entries:</strong> ${trends?.length || 0}</p>
+  <div class="header">
+    <h1>🚀 AI Automation Research Export</h1>
+    <div class="meta">
+      <div class="meta-item">
+        <strong>Generated:</strong> ${new Date().toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}
+      </div>
+      <div class="meta-item">
+        <strong>Total Research Entries:</strong> ${trends?.length || 0}
+      </div>
+    </div>
   </div>
 `;
 
       trends?.forEach((trend, index) => {
-        if (index > 0) html += '<div class="separator"></div>';
-
         html += `
-  <h2>${index + 1}. ${trend.topic}</h2>
-  <p class="meta"><strong>Date:</strong> ${new Date(trend.created_at).toLocaleDateString()}</p>
+  <div class="research-entry">
+    <h2>${index + 1}. ${trend.topic}</h2>
+    <p class="entry-meta">📅 ${new Date(trend.created_at).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</p>
 
-  <h3>Summary</h3>
-  <p>${trend.summary}</p>
+    <h3>📝 Summary</h3>
+    <div class="summary">${trend.summary}</div>
 `;
 
         if (trend.tools_mentioned && trend.tools_mentioned.length > 0) {
           html += `
-  <h3>Tools Mentioned</h3>
-  <div>`;
+    <div class="tools-section">
+      <h3>🛠️ Tools & Platforms (${trend.tools_mentioned.length})</h3>
+      <div>`;
           trend.tools_mentioned.forEach((tool: string) => {
             html += `<span class="tool-badge">${tool}</span>`;
           });
-          html += `</div>`;
+          html += `
+      </div>
+    </div>`;
         }
 
         if (trend.blog_ideas && trend.blog_ideas.length > 0) {
           html += `
-  <h3>Blog Ideas (${trend.blog_ideas.length})</h3>`;
+    <div class="blog-ideas-section">
+      <h3>💡 Blog Content Ideas (${trend.blog_ideas.length})</h3>`;
           trend.blog_ideas.forEach((idea: any) => {
             const categoryClass = `category-${idea.day.toLowerCase()}`;
             html += `
-  <div class="blog-idea">
-    <div><span class="${categoryClass} category-badge">${idea.day}</span><strong>${idea.title}</strong></div>
-    <p>${idea.description}</p>
-  </div>`;
+      <div class="blog-idea">
+        <div class="blog-idea-header">
+          <span class="${categoryClass} category-badge">${idea.day}</span>
+          <span class="blog-title">${idea.title}</span>
+        </div>
+        <p class="blog-description">${idea.description}</p>
+      </div>`;
           });
+          html += `
+    </div>`;
         }
+
+        html += `
+  </div>`;
       });
 
       html += `
