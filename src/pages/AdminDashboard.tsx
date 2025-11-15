@@ -192,6 +192,47 @@ export default function AdminDashboard() {
     }
   };
 
+  const deleteResearch = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this research entry? This action cannot be undone.')) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from('trends')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      alert('Failed to delete research: ' + error.message);
+    } else {
+      setTrends(trends.filter(t => t.id !== id));
+      setSelectedResearchIds(selectedResearchIds.filter(researchId => researchId !== id));
+    }
+  };
+
+  const deleteSelectedResearch = async () => {
+    if (selectedResearchIds.length === 0) {
+      alert('No research entries selected');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selectedResearchIds.length} research ${selectedResearchIds.length === 1 ? 'entry' : 'entries'}? This action cannot be undone.`)) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from('trends')
+      .delete()
+      .in('id', selectedResearchIds);
+
+    if (error) {
+      alert('Failed to delete research: ' + error.message);
+    } else {
+      setTrends(trends.filter(t => !selectedResearchIds.includes(t.id)));
+      setSelectedResearchIds([]);
+    }
+  };
+
   const runResearch = async (customTopic?: string) => {
     if (!customTopic && !researchTopic.trim()) {
       setShowResearchInput(true);
@@ -529,6 +570,15 @@ export default function AdminDashboard() {
                     )}
                   </div>
                   <div className="flex gap-3">
+                    {selectedResearchIds.length > 0 && (
+                      <button
+                        onClick={deleteSelectedResearch}
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                        Delete ({selectedResearchIds.length})
+                      </button>
+                    )}
                     <div className="relative group">
                       <button
                         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
@@ -632,6 +682,13 @@ export default function AdminDashboard() {
                           <div className="flex-1">
                             <h3 className="text-xl font-bold text-teal-400">{trend.topic}</h3>
                           </div>
+                          <button
+                            onClick={() => deleteResearch(trend.id)}
+                            className="text-gray-400 hover:text-red-500 transition-colors p-2 hover:bg-red-900 hover:bg-opacity-20 rounded-lg"
+                            title="Delete this research"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
                         </div>
                         <p className="text-gray-300 mb-4 ml-9">{trend.summary}</p>
 
