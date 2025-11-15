@@ -68,7 +68,7 @@ Also provide:
             content: prompt
           }
         ],
-        model: 'grok-beta',
+        model: 'grok-2-latest',
         temperature: 0.7,
       }),
     });
