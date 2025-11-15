@@ -142,24 +142,23 @@ export default function AdminDashboard() {
       return;
     }
 
-    // For PDF, open the HTML in a new window for printing
+    // For PDF, download HTML file that user can open and print
     if (format === 'pdf') {
       const html = await response.text();
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write(html);
-        printWindow.document.close();
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `research-export-${new Date().toISOString().split('T')[0]}.html`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
 
-        // Wait for content to load, then trigger print
-        printWindow.onload = () => {
-          setTimeout(() => {
-            printWindow.focus();
-            printWindow.print();
-          }, 250);
-        };
-      } else {
-        alert('Please allow popups to generate PDF');
-      }
+      // Show instructions
+      setTimeout(() => {
+        alert('HTML file downloaded! To create a PDF:\n\n1. Open the downloaded HTML file in your browser\n2. Press Ctrl+P (Windows) or Cmd+P (Mac)\n3. Select "Save as PDF" as the destination\n4. Click Save\n\nYour research will be beautifully formatted and ready to print!');
+      }, 500);
       return;
     }
 
