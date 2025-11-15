@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff } from 'lucide-react';
+import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff, Lightbulb } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Blog, Trend, EmailCampaign } from '../lib/supabase';
 
@@ -483,7 +483,7 @@ export default function AdminDashboard() {
                     <p className="text-gray-400 text-xl">No trends collected yet</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {trends.map((trend) => (
                       <div
                         key={trend.id}
@@ -494,7 +494,7 @@ export default function AdminDashboard() {
 
                         {trend.tools_mentioned.length > 0 && (
                           <div className="mb-4">
-                            <p className="text-sm text-gray-400 mb-2">Tools Mentioned:</p>
+                            <p className="text-sm font-semibold text-gray-300 mb-2">Tools Mentioned:</p>
                             <div className="flex flex-wrap gap-2">
                               {trend.tools_mentioned.map((tool, index) => (
                                 <span
@@ -508,7 +508,34 @@ export default function AdminDashboard() {
                           </div>
                         )}
 
-                        <p className="text-sm text-gray-400">
+                        {trend.blog_ideas && trend.blog_ideas.length > 0 && (
+                          <div className="mt-6 border-t border-gray-700 pt-6">
+                            <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                              <Lightbulb className="w-5 h-5 text-yellow-400" />
+                              Blog Ideas ({trend.blog_ideas.length})
+                            </h4>
+                            <div className="grid gap-3">
+                              {trend.blog_ideas.map((idea: any, index: number) => (
+                                <div
+                                  key={index}
+                                  className="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700 hover:border-teal-500 transition-all"
+                                >
+                                  <div className="flex items-start gap-3">
+                                    <span className={`${getCategoryColor(idea.day)} text-white text-xs font-semibold px-2 py-1 rounded shrink-0`}>
+                                      {idea.day}
+                                    </span>
+                                    <div className="flex-1">
+                                      <h5 className="text-white font-semibold mb-1">{idea.title}</h5>
+                                      <p className="text-sm text-gray-400">{idea.description}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <p className="text-sm text-gray-400 mt-4">
                           Collected: {new Date(trend.created_at).toLocaleString()}
                         </p>
                       </div>
