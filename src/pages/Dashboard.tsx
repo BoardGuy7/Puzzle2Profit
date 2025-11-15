@@ -94,6 +94,9 @@ export default function Dashboard() {
                 <p className="text-xs text-orange-500 font-semibold">
                   {isPaid ? 'Premium Member' : 'Free Account'}
                 </p>
+                <p className="text-xs text-gray-500">
+                  Admin: {profile?.is_admin ? 'Yes' : 'No'} | ID: {profile?.id?.substring(0, 8)}
+                </p>
               </div>
               {profile?.is_admin && (
                 <Link
