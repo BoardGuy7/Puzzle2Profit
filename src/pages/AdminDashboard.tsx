@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [researchLoading, setResearchLoading] = useState(false);
   const [researchTopic, setResearchTopic] = useState('');
   const [showResearchInput, setShowResearchInput] = useState(false);
+  const [selectedResearchIds, setSelectedResearchIds] = useState<string[]>([]);
   const [stats, setStats] = useState({
     totalBlogs: 0,
     publishedBlogs: 0,
@@ -114,9 +115,81 @@ export default function AdminDashboard() {
     navigate('/');
   };
 
-  const exportResearch = async (format: 'json' | 'markdown' | 'csv') => {
-    const exportUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-research?format=${format}`;
-    window.open(exportUrl, '_blank');
+  const exportResearch = async (format: 'json' | 'markdown' | 'csv' | 'pdf') => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert('Not authenticated');
+      return;
+    }
+
+    let exportUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-research?format=${format}`;
+
+    // Add selected IDs if any are selected
+    if (selectedResearchIds.length > 0) {
+      exportUrl += `&ids=${selectedResearchIds.join(',')}`;
+    }
+
+    // For PDF, open in new window so user can print to PDF
+    if (format === 'pdf') {
+      const response = await fetch(exportUrl, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.ok) {
+        const html = await response.text();
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(html);
+          printWindow.document.close();
+          // Automatically trigger print dialog after a short delay
+          setTimeout(() => {
+            printWindow.print();
+          }, 500);
+        }
+      } else {
+        alert('Export failed: ' + (await response.text()));
+      }
+      return;
+    }
+
+    // For other formats, download as file
+    const response = await fetch(exportUrl, {
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `research-export.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } else {
+      alert('Export failed: ' + (await response.text()));
+    }
+  };
+
+  const toggleResearchSelection = (id: string) => {
+    setSelectedResearchIds(prev =>
+      prev.includes(id)
+        ? prev.filter(researchId => researchId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const toggleAllResearch = () => {
+    if (selectedResearchIds.length === trends.length) {
+      setSelectedResearchIds([]);
+    } else {
+      setSelectedResearchIds(trends.map(t => t.id));
+    }
   };
 
   const runResearch = async (customTopic?: string) => {
@@ -439,14 +512,29 @@ export default function AdminDashboard() {
             {activeTab === 'trends' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-white">AI Research Trends</h2>
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-bold text-white">AI Research Trends</h2>
+                    {trends.length > 0 && (
+                      <button
+                        onClick={toggleAllResearch}
+                        className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+                      >
+                        {selectedResearchIds.length === trends.length ? 'Deselect All' : 'Select All'}
+                      </button>
+                    )}
+                    {selectedResearchIds.length > 0 && (
+                      <span className="text-sm text-gray-400">
+                        {selectedResearchIds.length} selected
+                      </span>
+                    )}
+                  </div>
                   <div className="flex gap-3">
                     <div className="relative group">
                       <button
                         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
                       >
                         <Download className="w-5 h-5" />
-                        Export
+                        Export {selectedResearchIds.length > 0 ? `(${selectedResearchIds.length})` : 'All'}
                       </button>
                       <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                         <button
@@ -460,6 +548,12 @@ export default function AdminDashboard() {
                           className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 transition-colors"
                         >
                           Export as Markdown
+                        </button>
+                        <button
+                          onClick={() => exportResearch('pdf')}
+                          className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 transition-colors"
+                        >
+                          Export as PDF
                         </button>
                         <button
                           onClick={() => exportResearch('csv')}
@@ -522,13 +616,27 @@ export default function AdminDashboard() {
                     {trends.map((trend) => (
                       <div
                         key={trend.id}
-                        className="bg-gray-900 bg-opacity-50 rounded-xl p-6 border border-gray-800"
+                        className={`bg-gray-900 bg-opacity-50 rounded-xl p-6 border transition-all ${
+                          selectedResearchIds.includes(trend.id)
+                            ? 'border-teal-500 bg-teal-900 bg-opacity-10'
+                            : 'border-gray-800'
+                        }`}
                       >
-                        <h3 className="text-xl font-bold text-teal-400 mb-3">{trend.topic}</h3>
-                        <p className="text-gray-300 mb-4">{trend.summary}</p>
+                        <div className="flex items-start gap-4 mb-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedResearchIds.includes(trend.id)}
+                            onChange={() => toggleResearchSelection(trend.id)}
+                            className="mt-1 w-5 h-5 rounded border-gray-600 bg-gray-800 text-teal-500 focus:ring-teal-500 focus:ring-offset-gray-900 cursor-pointer"
+                          />
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-teal-400">{trend.topic}</h3>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4 ml-9">{trend.summary}</p>
 
                         {trend.tools_mentioned.length > 0 && (
-                          <div className="mb-4">
+                          <div className="mb-4 ml-9">
                             <p className="text-sm font-semibold text-gray-300 mb-2">Tools Mentioned:</p>
                             <div className="flex flex-wrap gap-2">
                               {trend.tools_mentioned.map((tool, index) => (
@@ -544,7 +652,7 @@ export default function AdminDashboard() {
                         )}
 
                         {trend.blog_ideas && trend.blog_ideas.length > 0 && (
-                          <div className="mt-6 border-t border-gray-700 pt-6">
+                          <div className="mt-6 ml-9 border-t border-gray-700 pt-6">
                             <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                               <Lightbulb className="w-5 h-5 text-yellow-400" />
                               Blog Ideas ({trend.blog_ideas.length})
@@ -570,7 +678,7 @@ export default function AdminDashboard() {
                           </div>
                         )}
 
-                        <p className="text-sm text-gray-400 mt-4">
+                        <p className="text-sm text-gray-400 mt-4 ml-9">
                           Collected: {new Date(trend.created_at).toLocaleString()}
                         </p>
                       </div>
