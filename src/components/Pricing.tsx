@@ -35,7 +35,7 @@ export default function Pricing() {
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-white mb-2">Monthly Access</h3>
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-white">$48</span>
+                <span className="text-5xl font-bold text-white">$8</span>
                 <span className="text-xl text-gray-300">/month</span>
               </div>
             </div>
@@ -79,18 +79,18 @@ export default function Pricing() {
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <div className="bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm flex items-center gap-2">
                 <Zap className="w-4 h-4" />
-                BEST VALUE - Save 17%
+                BEST VALUE - Save 8%
               </div>
             </div>
 
             <div className="mb-6 mt-4">
               <h3 className="text-2xl font-bold text-white mb-2">Annual Access</h3>
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-white">$499</span>
+                <span className="text-5xl font-bold text-white">$88</span>
                 <span className="text-xl text-white opacity-80">/year</span>
               </div>
               <p className="text-white opacity-90 mt-2">
-                Just $41.58/month - Save $77/year
+                Just $7.33/month - Save $8/year
               </p>
             </div>
 
