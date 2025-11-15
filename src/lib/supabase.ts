@@ -107,3 +107,82 @@ export interface EmailCampaign {
   sent_at: string;
   last_synced: string;
 }
+
+export interface Path {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  tech_stack_focus: string;
+  active: boolean;
+  week_start_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TechStack {
+  id: string;
+  path_id: string;
+  name: string;
+  category: string;
+  description: string;
+  website_url: string;
+  affiliate_url: string;
+  commission_rate: string;
+  pricing_model: string;
+  key_features: string[];
+  selected_for_week: boolean;
+  priority_score: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WeeklyContentPlan {
+  id: string;
+  path_id: string;
+  week_start_date: string;
+  day_number: number;
+  category: 'Build' | 'Attract' | 'Convert' | 'Deliver' | 'Support' | 'Profit' | 'Rest';
+  blog_title: string;
+  blog_outline: string;
+  affiliate_slots: string[];
+  status: 'draft' | 'scheduled' | 'published';
+  scheduled_publish_date: string | null;
+  published_date: string | null;
+  blog_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PathAnalytics {
+  id: string;
+  path_id: string;
+  date: string;
+  page_views: number;
+  unique_visitors: number;
+  affiliate_clicks: number;
+  conversions: number;
+  revenue: number;
+  avg_time_on_page: number;
+  bounce_rate: number;
+  created_at: string;
+}
+
+export interface UTMTracking {
+  id: string;
+  path_id: string;
+  tech_stack_id: string | null;
+  blog_id: string | null;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+  clicked_at: string;
+  user_id: string | null;
+  ip_address: string;
+  user_agent: string;
+  referrer: string;
+  converted: boolean;
+  conversion_value: number | null;
+}

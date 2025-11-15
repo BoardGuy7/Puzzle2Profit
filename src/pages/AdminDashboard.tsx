@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff, Lightbulb, Download } from 'lucide-react';
+import { BarChart3, FileText, TrendingUp, Mail, PlusCircle, Edit, Trash2, ExternalLink, Eye, MousePointerClick, Calendar, LogOut, EyeOff, Lightbulb, Download, ArrowLeftRight, Layers } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Blog, Trend, EmailCampaign } from '../lib/supabase';
+import PathsManager from '../components/PathsManager';
+import TechStackSelector from '../components/TechStackSelector';
+import WeeklyContentCalendar from '../components/WeeklyContentCalendar';
 
 export default function AdminDashboard() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'blogs' | 'metrics' | 'trends'>('blogs');
+  const [activeTab, setActiveTab] = useState<'blogs' | 'metrics' | 'trends' | 'paths' | 'techstacks' | 'calendar'>('paths');
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [trends, setTrends] = useState<Trend[]>([]);
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
@@ -358,39 +361,72 @@ export default function AdminDashboard() {
         </div>
 
         <div className="mb-6">
-          <div className="flex gap-2 border-b border-gray-800">
+          <div className="flex gap-2 border-b border-gray-800 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab('paths')}
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
+                activeTab === 'paths'
+                  ? 'text-teal-400 border-b-2 border-teal-400'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <ArrowLeftRight className="w-5 h-5 inline mr-2" />
+              A/B Paths
+            </button>
+            <button
+              onClick={() => setActiveTab('techstacks')}
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
+                activeTab === 'techstacks'
+                  ? 'text-teal-400 border-b-2 border-teal-400'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <Layers className="w-5 h-5 inline mr-2" />
+              Tech Stacks
+            </button>
+            <button
+              onClick={() => setActiveTab('calendar')}
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
+                activeTab === 'calendar'
+                  ? 'text-teal-400 border-b-2 border-teal-400'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <Calendar className="w-5 h-5 inline mr-2" />
+              Content Calendar
+            </button>
             <button
               onClick={() => setActiveTab('blogs')}
-              className={`px-6 py-3 font-semibold transition-colors ${
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
                 activeTab === 'blogs'
                   ? 'text-teal-400 border-b-2 border-teal-400'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
               <FileText className="w-5 h-5 inline mr-2" />
-              Blog Management
+              Blogs
             </button>
             <button
               onClick={() => setActiveTab('metrics')}
-              className={`px-6 py-3 font-semibold transition-colors ${
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
                 activeTab === 'metrics'
                   ? 'text-teal-400 border-b-2 border-teal-400'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
               <BarChart3 className="w-5 h-5 inline mr-2" />
-              Email Metrics
+              Metrics
             </button>
             <button
               onClick={() => setActiveTab('trends')}
-              className={`px-6 py-3 font-semibold transition-colors ${
+              className={`px-6 py-3 font-semibold transition-colors whitespace-nowrap ${
                 activeTab === 'trends'
                   ? 'text-teal-400 border-b-2 border-teal-400'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
               <TrendingUp className="w-5 h-5 inline mr-2" />
-              AI Trends
+              AI Research
             </button>
           </div>
         </div>
@@ -401,6 +437,12 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <>
+            {activeTab === 'paths' && <PathsManager />}
+
+            {activeTab === 'techstacks' && <TechStackSelector />}
+
+            {activeTab === 'calendar' && <WeeklyContentCalendar />}
+
             {activeTab === 'blogs' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
