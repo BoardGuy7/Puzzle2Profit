@@ -56,9 +56,17 @@ export default function AdminDashboard() {
   const fetchTrends = async () => {
     const { data } = await supabase
       .from('trends')
-      .select('*')
+      .select(`
+        *,
+        paths:path_id (
+          id,
+          name,
+          slug,
+          tech_stack_focus
+        )
+      `)
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(20);
     if (data) setTrends(data);
   };
 
@@ -659,7 +667,7 @@ export default function AdminDashboard() {
                       className="bg-teal-500 hover:bg-teal-600 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
                     >
                       <TrendingUp className="w-5 h-5" />
-                      {researchLoading ? 'Running...' : 'Run Research'}
+                      {researchLoading ? 'Researching Paths A & B...' : 'Run Research (Both Paths)'}
                     </button>
                   </div>
                 </div>
@@ -720,7 +728,18 @@ export default function AdminDashboard() {
                             className="mt-1 w-5 h-5 rounded border-gray-600 bg-gray-800 text-teal-500 focus:ring-teal-500 focus:ring-offset-gray-900 cursor-pointer"
                           />
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-teal-400">{trend.topic}</h3>
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="text-xl font-bold text-teal-400">{trend.topic}</h3>
+                              {trend.paths && (
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                                  trend.paths.slug === 'a'
+                                    ? 'bg-blue-900 bg-opacity-50 text-blue-300 border border-blue-700'
+                                    : 'bg-purple-900 bg-opacity-50 text-purple-300 border border-purple-700'
+                                }`}>
+                                  {trend.paths.name}: {trend.paths.tech_stack_focus}
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <button
                             onClick={() => deleteResearch(trend.id)}

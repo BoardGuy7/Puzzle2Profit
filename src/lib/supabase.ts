@@ -82,6 +82,13 @@ export interface Trend {
   key_insights: string[];
   blog_ideas: Array<{title: string; category: string; day: string; description: string}>;
   source: string;
+  path_id: string | null;
+  paths?: {
+    id: string;
+    name: string;
+    slug: string;
+    tech_stack_focus: string;
+  };
   created_at: string;
 }
 
