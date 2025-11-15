@@ -89,7 +89,8 @@ Format the response as JSON with keys: summary, tools, blog_ideas`;
     });
 
     if (!grokResponse.ok) {
-      throw new Error('Grok API request failed');
+      const errorText = await grokResponse.text();
+      throw new Error(`Grok API request failed (${grokResponse.status}): ${errorText}`);
     }
 
     const grokData = await grokResponse.json();
