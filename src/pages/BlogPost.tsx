@@ -146,13 +146,17 @@ export default function BlogPost() {
 
         <div className="prose prose-invert prose-lg max-w-none mb-12">
           {(() => {
+            if (!blog.content) {
+              return <p className="text-gray-300">No content available.</p>;
+            }
+
             let content = blog.content;
 
             // Remove markdown code blocks if present
             if (content.includes('```html')) {
               const htmlMatch = content.match(/```html\s*([\s\S]*?)```/);
-              if (htmlMatch) {
-                content = htmlMatch[1];
+              if (htmlMatch && htmlMatch[1]) {
+                content = htmlMatch[1].trim();
               }
             }
 
@@ -164,8 +168,8 @@ export default function BlogPost() {
 
             // Extract body content if it's a full HTML document
             const bodyMatch = content.match(/<body[^>]*>([\s\S]*?)<\/body>/);
-            if (bodyMatch) {
-              content = bodyMatch[1];
+            if (bodyMatch && bodyMatch[1]) {
+              content = bodyMatch[1].trim();
             }
 
             // Check if content has HTML tags
