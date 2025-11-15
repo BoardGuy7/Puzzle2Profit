@@ -159,6 +159,81 @@ Deno.serve(async (req: Request) => {
       font-size: 13px;
       font-weight: 600;
     }
+    .tool-detailed {
+      background: #ffffff;
+      border: 2px solid #e0f2fe;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      page-break-inside: avoid;
+    }
+    .tool-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0369a1;
+      margin-bottom: 8px;
+    }
+    .tool-description {
+      color: #4b5563;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .tool-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .tool-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tool-meta-label {
+      font-weight: 600;
+      color: #6b7280;
+    }
+    .tool-website {
+      color: #0369a1;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .tool-affiliate {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .tool-features {
+      margin-top: 10px;
+    }
+    .tool-features ul {
+      margin: 5px 0 0 20px;
+      padding: 0;
+    }
+    .tool-features li {
+      color: #374151;
+      margin: 3px 0;
+    }
+    .insights-section {
+      background: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .insights-section ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+    .insights-section li {
+      color: #92400e;
+      margin: 8px 0;
+      line-height: 1.6;
+    }
     .blog-ideas-section {
       margin-top: 25px;
     }
@@ -265,7 +340,62 @@ Deno.serve(async (req: Request) => {
     <div class="summary">${trend.summary}</div>
 `;
 
-        if (trend.tools_mentioned && trend.tools_mentioned.length > 0) {
+        // Display detailed tools information if available
+        if (trend.tools_detailed && trend.tools_detailed.length > 0) {
+          html += `
+    <div class="tools-section">
+      <h3>🛠️ Tools & Platforms for Affiliate Sign-Up (${trend.tools_detailed.length})</h3>`;
+
+          trend.tools_detailed.forEach((tool: any) => {
+            html += `
+      <div class="tool-detailed">
+        <div class="tool-name">${tool.name}</div>
+        <div class="tool-description">${tool.description}</div>
+        <div class="tool-meta">
+          <div class="tool-meta-item">
+            <span class="tool-meta-label">Website:</span>
+            <a href="${tool.website}" class="tool-website" target="_blank">${tool.website}</a>
+          </div>
+          <div class="tool-meta-item">
+            <span class="tool-meta-label">Pricing:</span>
+            <span>${tool.pricing}</span>
+          </div>
+        </div>`;
+
+            // Highlight affiliate program info
+            if (tool.affiliate_program && tool.affiliate_program.toLowerCase().includes('yes')) {
+              html += `
+        <div class="tool-meta-item">
+          <span class="tool-affiliate">✓ AFFILIATE PROGRAM: ${tool.affiliate_program}</span>
+        </div>`;
+            } else {
+              html += `
+        <div class="tool-meta-item">
+          <span style="color: #6b7280; font-size: 12px;">Affiliate: ${tool.affiliate_program || 'Unknown'}</span>
+        </div>`;
+            }
+
+            if (tool.key_features && tool.key_features.length > 0) {
+              html += `
+        <div class="tool-features">
+          <strong>Key Features:</strong>
+          <ul>`;
+              tool.key_features.forEach((feature: string) => {
+                html += `<li>${feature}</li>`;
+              });
+              html += `
+          </ul>
+        </div>`;
+            }
+
+            html += `
+      </div>`;
+          });
+
+          html += `
+    </div>`;
+        } else if (trend.tools_mentioned && trend.tools_mentioned.length > 0) {
+          // Fallback to simple tool badges if detailed info not available
           html += `
     <div class="tools-section">
       <h3>🛠️ Tools & Platforms (${trend.tools_mentioned.length})</h3>
@@ -275,6 +405,20 @@ Deno.serve(async (req: Request) => {
           });
           html += `
       </div>
+    </div>`;
+        }
+
+        // Display key insights if available
+        if (trend.key_insights && trend.key_insights.length > 0) {
+          html += `
+    <div class="insights-section">
+      <h3>💡 Key Actionable Insights</h3>
+      <ul>`;
+          trend.key_insights.forEach((insight: string) => {
+            html += `<li>${insight}</li>`;
+          });
+          html += `
+      </ul>
     </div>`;
         }
 

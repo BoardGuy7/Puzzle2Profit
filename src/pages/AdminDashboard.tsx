@@ -690,7 +690,59 @@ export default function AdminDashboard() {
                         </div>
                         <p className="text-gray-300 mb-4 ml-9">{trend.summary}</p>
 
-                        {trend.tools_mentioned.length > 0 && (
+                        {trend.tools_detailed && trend.tools_detailed.length > 0 ? (
+                          <div className="mb-4 ml-9">
+                            <p className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                              <span>🛠️ Tools & Affiliate Programs ({trend.tools_detailed.length})</span>
+                            </p>
+                            <div className="space-y-3">
+                              {trend.tools_detailed.map((tool, index) => (
+                                <div
+                                  key={index}
+                                  className="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700"
+                                >
+                                  <div className="flex items-start justify-between gap-3 mb-2">
+                                    <h5 className="text-blue-400 font-bold text-sm">{tool.name}</h5>
+                                    {tool.affiliate_program && tool.affiliate_program.toLowerCase().includes('yes') && (
+                                      <span className="bg-green-900 bg-opacity-50 text-green-300 text-xs font-semibold px-2 py-1 rounded shrink-0">
+                                        ✓ Affiliate
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-gray-400 text-xs mb-2">{tool.description}</p>
+                                  <div className="flex flex-wrap gap-3 text-xs mb-2">
+                                    <a
+                                      href={tool.website}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1"
+                                    >
+                                      <ExternalLink className="w-3 h-3" />
+                                      {tool.website}
+                                    </a>
+                                    <span className="text-gray-500">•</span>
+                                    <span className="text-gray-400">{tool.pricing}</span>
+                                  </div>
+                                  {tool.affiliate_program && (
+                                    <p className="text-xs text-gray-500 mb-2">
+                                      <strong>Affiliate:</strong> {tool.affiliate_program}
+                                    </p>
+                                  )}
+                                  {tool.key_features && tool.key_features.length > 0 && (
+                                    <div className="mt-2 pt-2 border-t border-gray-700">
+                                      <p className="text-xs text-gray-400 mb-1">Key Features:</p>
+                                      <ul className="list-disc list-inside text-xs text-gray-500 space-y-1">
+                                        {tool.key_features.map((feature, idx) => (
+                                          <li key={idx}>{feature}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : trend.tools_mentioned.length > 0 && (
                           <div className="mb-4 ml-9">
                             <p className="text-sm font-semibold text-gray-300 mb-2">Tools Mentioned:</p>
                             <div className="flex flex-wrap gap-2">
@@ -703,6 +755,20 @@ export default function AdminDashboard() {
                                 </span>
                               ))}
                             </div>
+                          </div>
+                        )}
+
+                        {trend.key_insights && trend.key_insights.length > 0 && (
+                          <div className="mb-4 ml-9 bg-yellow-900 bg-opacity-20 border border-yellow-700 rounded-lg p-4">
+                            <p className="text-sm font-semibold text-yellow-400 mb-2 flex items-center gap-2">
+                              <Lightbulb className="w-4 h-4" />
+                              Key Actionable Insights
+                            </p>
+                            <ul className="list-disc list-inside text-sm text-gray-300 space-y-1">
+                              {trend.key_insights.map((insight, index) => (
+                                <li key={index}>{insight}</li>
+                              ))}
+                            </ul>
                           </div>
                         )}
 

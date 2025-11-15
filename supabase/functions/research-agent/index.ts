@@ -127,9 +127,17 @@ Research Topic: ${researchTopic}
 Your task:
 1. Provide a compelling 200-300 word summary of the TOP 3 most impactful trends happening RIGHT NOW (2025) in this area. Focus on actionable insights that give solopreneurs competitive advantages.
 
-2. Identify 4-6 specific, real AI tools that enable these trends. Prioritize tools with affiliate programs or monetization potential.
+2. Identify 4-6 specific, real AI tools that enable these trends. For EACH tool provide:
+   - Tool name
+   - Brief description (1-2 sentences)
+   - Official website URL
+   - Affiliate program information (if available, include sign-up link or note if they have an affiliate program)
+   - Pricing tier (Free/Freemium/Paid with approximate pricing)
+   - Top 2-3 key features
 
-3. Create EXACTLY 7 blog post ideas (one for each day of the week) following this framework:
+3. Provide 3-5 actionable insights or tips that readers can implement immediately.
+
+4. Create EXACTLY 7 blog post ideas (one for each day of the week) following this framework:
    - Day 1 (Build): Foundation/Setup/Infrastructure
    - Day 2 (Attract): Marketing/Outreach/Visibility
    - Day 3 (Convert): Sales/Persuasion/Closing
@@ -150,6 +158,21 @@ Format as JSON:
 {
   "summary": "...",
   "tools": ["Tool Name 1", "Tool Name 2", ...],
+  "tools_detailed": [
+    {
+      "name": "Tool Name",
+      "description": "Brief description",
+      "website": "https://...",
+      "affiliate_program": "Yes - https://affiliate-link or No or Unknown",
+      "pricing": "Free tier available, Pro at $X/month",
+      "key_features": ["Feature 1", "Feature 2", "Feature 3"]
+    }
+  ],
+  "key_insights": [
+    "Actionable insight 1...",
+    "Actionable insight 2...",
+    "Actionable insight 3..."
+  ],
   "blog_ideas": [
     {"day": "Build", "title": "...", "description": "..."},
     {"day": "Attract", "title": "...", "description": "..."},
@@ -211,6 +234,8 @@ Format as JSON:
       topic: researchTopic,
       summary: parsedData.summary || responseText.substring(0, 500),
       tools_mentioned: parsedData.tools || [],
+      tools_detailed: parsedData.tools_detailed || [],
+      key_insights: parsedData.key_insights || [],
       blog_ideas: parsedData.blog_ideas || [],
       source: 'grok-api'
     });
@@ -223,7 +248,7 @@ Format as JSON:
       JSON.stringify({
         success: true,
         topic: researchTopic,
-        data: parsedData
+        message: 'Research completed and saved'
       }),
       {
         status: 200,

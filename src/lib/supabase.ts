@@ -64,12 +64,23 @@ export interface Blog {
   updated_at: string;
 }
 
+export interface ToolDetailed {
+  name: string;
+  description: string;
+  website: string;
+  affiliate_program: string;
+  pricing: string;
+  key_features: string[];
+}
+
 export interface Trend {
   id: string;
   topic: string;
   summary: string;
   tools_mentioned: string[];
-  blog_ideas: Array<{title: string; category: string}>;
+  tools_detailed: ToolDetailed[];
+  key_insights: string[];
+  blog_ideas: Array<{title: string; category: string; day: string; description: string}>;
   source: string;
   created_at: string;
 }
